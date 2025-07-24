@@ -1,39 +1,67 @@
-### Documentation is included in the Documentation folder ###
+# Claims Automation Framework
 
+This project automates the end-to-end process of validating and processing insurance claims. It uses **UiPath REFramework (C#)** for transaction handling, integrates **Python** for encryption and data processing, **SQLite** for structured storage, and **Excel** for reporting.
 
-### REFrameWork Template ###
-**Robotic Enterprise Framework**
+---
 
-* Built on top of *Transactional Business Process* template
-* Uses *State Machine* layout for the phases of automation project
-* Offers high level logging, exception handling and recovery
-* Keeps external settings in *Config.xlsx* file and Orchestrator assets
-* Pulls credentials from Orchestrator assets and *Windows Credential Manager*
-* Gets transaction data from Orchestrator queue and updates back status
-* Takes screenshots in case of system exceptions
+## ✅ Key Features
+- Reads claims data from Excel.
+- Applies validation rules for policy IDs, claim amounts, dates, branches, and claim types.
+- Encrypts sensitive data (Policyholder_ID) using SHA-256 in Python.
+- Stores valid and invalid claims in an SQLite database.
+- Generates a compliance summary report in Excel.
+- Handles error scenarios such as missing files, invalid data, and database errors.
 
+---
 
-### How It Works ###
+## 🛠 Tech Stack
+- **UiPath Studio** (REFramework in C#)
+- **Python 3.12.x** with:
+  - `pandas`
+  - `openpyxl`
+- **SQLite**
+- **Excel**
 
-1. **INITIALIZE PROCESS**
- + ./Framework/*InitiAllSettings* - Load configuration data from Config.xlsx file and from assets
- + ./Framework/*GetAppCredential* - Retrieve credentials from Orchestrator assets or local Windows Credential Manager
- + ./Framework/*InitiAllApplications* - Open and login to applications used throughout the process
+---
 
-2. **GET TRANSACTION DATA**
- + ./Framework/*GetTransactionData* - Fetches transactions from an Orchestrator queue defined by Config("OrchestratorQueueName") or any other configured data source
+## ⚙️ Setup Instructions
 
-3. **PROCESS TRANSACTION**
- + *Process* - Process trasaction and invoke other workflows related to the process being automated 
- + ./Framework/*SetTransactionStatus* - Updates the status of the processed transaction (Orchestrator transactions by default): Success, Business Rule Exception or System Exception
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/claims-automation-framework.git
+```
 
-4. **END PROCESS**
- + ./Framework/*CloseAllApplications* - Logs out and closes applications used throughout the process
+### 2. Install Python Dependencies
+```bash
+pip install -r requirements.txt
+````
 
+### 3. Install UiPath Packages
+```bash
+- UiPath.Excel.Activities
+- UiPath.Database.Activities
+- UiPath.Python.Activities
+```
 
-### For New Project ###
+### 4. Configure Paths
+Update Config.xlsx in the Data folder with:
+```bash
+- Input and output file paths
+- Database path
+- Python script locations
+```
 
-1. Check the Config.xlsx file and add/customize any required fields and values
-2. Implement InitiAllApplications.xaml and CloseAllApplicatoins.xaml workflows, linking them in the Config.xlsx fields
-3. Implement GetTransactionData.xaml and SetTransactionStatus.xaml according to the transaction type being used (Orchestrator queues by default)
-4. Implement Process.xaml workflow and invoke other workflows related to the process being automated
+## ▶️ How to Run
+1. Open the UiPath project in UiPath Studio.
+2. Run Main.xaml.
+3. The process will:
+- Read the input claims Excel file.
+- Validate and encrypt data.
+- Insert records into SQLite.
+- Generate a summary report.
+
+## 🧪 Testing
+Use the Testing folder for:
+- Empty or missing input file
+- Corrupted Excel file
+- Database connection failure
