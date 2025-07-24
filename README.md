@@ -52,13 +52,13 @@ Update Config.xlsx in the Data folder with:
 1. Open the UiPath project in UiPath Studio.
 2. Run Main.xaml.
 3. The process will:
- - `Read the input claims Excel file`
- - `Validate and encrypt data`
- - `Insert records into SQLite`
- - `Generate a summary report`
+    - Read the input claims Excel file
+    - Validate and encrypt data
+    - Insert records into SQLite
+    - Generate a summary report
 
 ## 🧪 Testing
 Use the Testing folder for:
- - `Empty or missing input file`
- - `Corrupted Excel file`
- - `Database connection failure`
+ - Empty or missing input file
+ - Corrupted Excel file
+ - Database connection failure
