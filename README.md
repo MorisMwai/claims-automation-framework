@@ -37,31 +37,28 @@ pip install -r requirements.txt
 ````
 
 ### 3. Install UiPath Packages
-```bash
-- UiPath.Excel.Activities
-- UiPath.Database.Activities
-- UiPath.Python.Activities
-```
+- `UiPath.Excel.Activities`
+- `UiPath.Database.Activities`
+- `UiPath.Python.Activities`
 
 ### 4. Configure Paths
 Update Config.xlsx in the Data folder with:
-```bash
-- Input and output file paths
-- Database path
-- Python script locations
-```
+ - `Input and output file paths`
+ - `Database path`
+ - `Python script locations`
+
 
 ## ▶️ How to Run
 1. Open the UiPath project in UiPath Studio.
 2. Run Main.xaml.
 3. The process will:
-- Read the input claims Excel file.
-- Validate and encrypt data.
-- Insert records into SQLite.
-- Generate a summary report.
+ - `Read the input claims Excel file`
+ - `Validate and encrypt data`
+ - `Insert records into SQLite`
+ - `Generate a summary report`
 
 ## 🧪 Testing
 Use the Testing folder for:
-- Empty or missing input file
-- Corrupted Excel file
-- Database connection failure
+ - `Empty or missing input file`
+ - `Corrupted Excel file`
+ - `Database connection failure`
