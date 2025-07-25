@@ -261,7 +261,7 @@
                 </Assign>
                 <Throw DisplayName="Throw Business Exception - No file found" sap:VirtualizedContainerService.HintSize="434,118" sap2010:WorkflowViewState.IdRef="Throw_5">
                   <InArgument x:TypeArguments="s:Exception">
-                    <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue`1_113">new BusinessRuleException($"Input file not found at path: {in_Config["InputFilePath"].ToString()}")</CSharpValue>
+                    <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue`1_113">new BusinessRuleException($"Input file not found at path: {in_Config["ClaimsFilePath"].ToString()}")</CSharpValue>
                   </InArgument>
                 </Throw>
               </Sequence>
