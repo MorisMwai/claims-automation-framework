@@ -192,7 +192,7 @@
               </InArgument>
             </Assign.Value>
           </Assign>
-          <Assign DisplayName="Assign - Email Body (Invalid Excel fromat)" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_20">
+          <Assign DisplayName="Assign - Email Body (Invalid Excel format)" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_20">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">
                 <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_58">Body</CSharpReference>
