@@ -40,6 +40,7 @@
       <x:String>System.IO</x:String>
       <x:String>GlobalVariablesNamespace</x:String>
       <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>System.Linq.Expressions</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -111,7 +112,7 @@
       <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1309,2060" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1344,2060" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -169,7 +170,7 @@
             </Assign.To>
             <Assign.Value>
               <InArgument x:TypeArguments="x:String">
-                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_151">in_Config["Body_NoFileFound"].ToString().Replace("@InputFilePath", in_Config["InputFilePath"].ToString()).Replace("@Timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))</CSharpValue>
+                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_154">in_Config["Body_NoFileFound"].ToString().Replace("@InputFilePath", in_Config["ClaimsFilePath"].ToString()).Replace("@Timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))</CSharpValue>
               </InArgument>
             </Assign.Value>
           </Assign>
@@ -180,7 +181,7 @@
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <Assign DisplayName="Assign - Email Subject (Invalid Excel format)" sap:VirtualizedContainerService.HintSize="434,120" sap2010:WorkflowViewState.IdRef="Assign_19">
+          <Assign DisplayName="Assign - Email Subject (Invalid Excel fromat)" sap:VirtualizedContainerService.HintSize="434,120" sap2010:WorkflowViewState.IdRef="Assign_19">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">
                 <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_56">Subject</CSharpReference>
@@ -192,7 +193,7 @@
               </InArgument>
             </Assign.Value>
           </Assign>
-          <Assign DisplayName="Assign - Email Body (Invalid Excel format)" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_20">
+          <Assign DisplayName="Assign - Email Body (Invalid Excel fromat)" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_20">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">
                 <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_58">Body</CSharpReference>
@@ -279,7 +280,7 @@
       <ui:LogMessage DisplayName="Log Message - Business exception email sent" sap:VirtualizedContainerService.HintSize="470,174" sap2010:WorkflowViewState.IdRef="LogMessage_27" Level="Info">
         <ui:LogMessage.Message>
           <InArgument x:TypeArguments="x:Object">
-            <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_129">"Business exception email sent successfully to: " + in_Config["RecipientEmail_Business"].ToString()</CSharpValue>
+            <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_129">"Business exception email sent successfully to: " + in_Config["BusinessExceptionsAccount"].ToString()</CSharpValue>
           </InArgument>
         </ui:LogMessage.Message>
       </ui:LogMessage>
