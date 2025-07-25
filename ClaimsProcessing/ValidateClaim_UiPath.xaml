@@ -475,7 +475,7 @@
                 <ui:LogMessage DisplayName="Log Message - Claim_Date is valid" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info">
                   <ui:LogMessage.Message>
                     <InArgument x:TypeArguments="x:Object">
-                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_31">$"Claim_Date is valid: {DateTimeClaimDate}.ToString(yyyy-MM-dd)"</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_31">$"Claim_Date is valid: {DateTimeClaimDate.ToString("yyyy-MM-dd")}"</CSharpValue>
                     </InArgument>
                   </ui:LogMessage.Message>
                 </ui:LogMessage>
