@@ -279,7 +279,7 @@
       <ui:LogMessage DisplayName="Log Message - Business exception email sent" sap:VirtualizedContainerService.HintSize="470,174" sap2010:WorkflowViewState.IdRef="LogMessage_27" Level="Info">
         <ui:LogMessage.Message>
           <InArgument x:TypeArguments="x:Object">
-            <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_129">"Business exception email sent successfully to: " + in_Config["BusinessExceptionsAccount"].ToString()</CSharpValue>
+            <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_129">"Business exception email sent successfully to: " + in_Config["RecipientEmail_Business"].ToString()</CSharpValue>
           </InArgument>
         </ui:LogMessage.Message>
       </ui:LogMessage>
