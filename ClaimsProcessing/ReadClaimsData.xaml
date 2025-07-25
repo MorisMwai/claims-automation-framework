@@ -117,7 +117,7 @@
       <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1344,2895" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1309,2895" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="ClaimsFilePath" />
     </Sequence.Variables>
@@ -163,7 +163,7 @@
               </InArgument>
             </ui:FileExistsX.Path>
           </ui:FileExistsX>
-          <If DisplayName="If the Excel file exists" sap:VirtualizedContainerService.HintSize="470,617" sap2010:WorkflowViewState.IdRef="If_7">
+          <If DisplayName="If the Excel file exists" sap:VirtualizedContainerService.HintSize="470,57" sap2010:WorkflowViewState.IdRef="If_7">
             <If.Condition>
               <InArgument x:TypeArguments="x:Boolean">
                 <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_93">isInputFileExists == true</CSharpValue>
@@ -494,7 +494,11 @@
                   </usau:BackupSlot>
                 </ui:SendOutlookMail.ConnectionDetailsBackupSlot>
                 <ui:SendOutlookMail.Files>
-                  <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
+                  <scg:List x:TypeArguments="InArgument(x:String)" Capacity="4">
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_161">FilePath</CSharpValue>
+                    </InArgument>
+                  </scg:List>
                 </ui:SendOutlookMail.Files>
                 <ui:SendOutlookMail.Subject>
                   <InArgument x:TypeArguments="x:String">
