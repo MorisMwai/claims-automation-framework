@@ -372,7 +372,7 @@
                     </InArgument>
                   </ui:LogMessage.Message>
                 </ui:LogMessage>
-                <Assign DisplayName="Assign - Exceptio Reason" sap:VirtualizedContainerService.HintSize="434,120" sap2010:WorkflowViewState.IdRef="Assign_15">
+                <Assign DisplayName="Assign - Exception Reason" sap:VirtualizedContainerService.HintSize="434,120" sap2010:WorkflowViewState.IdRef="Assign_15">
                   <Assign.To>
                     <OutArgument x:TypeArguments="x:String">
                       <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_48">io_ExceptionReason</CSharpReference>
