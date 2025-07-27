@@ -112,7 +112,7 @@
       <AssemblyReference>UiPath.Python</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1309,2827" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1309,1530" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="PythonPath" />
       <Variable x:TypeArguments="x:String" Name="PythonLibraryPath" />
@@ -124,7 +124,7 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try to Hash Policyholder_ID" sap:VirtualizedContainerService.HintSize="538,2804" sap2010:WorkflowViewState.IdRef="TryCatch_2">
+    <TryCatch DisplayName="Try to Hash Policyholder_ID" sap:VirtualizedContainerService.HintSize="538,1507" sap2010:WorkflowViewState.IdRef="TryCatch_2">
       <TryCatch.Try>
         <Sequence sap2010:Annotation.AnnotationText="This workflow integrates UiPath with Python to hash the Policyholder_ID using SHA-256. It loads the Python script hash_policyholder_id.py, invokes the hash_policyholder_id() function, and returns the hashed value as a String." DisplayName="Call Python Hash" sap:VirtualizedContainerService.HintSize="536,1223" sap2010:WorkflowViewState.IdRef="Sequence_22">
           <sap:WorkflowViewStateService.ViewState>
@@ -194,7 +194,7 @@
               </InArgument>
             </ui:LogMessage.Message>
           </ui:LogMessage>
-          <p:PythonScope OperationTimeout="{x:Null}" DisplayName="Open Python Scope" sap:VirtualizedContainerService.HintSize="502,640" sap2010:WorkflowViewState.IdRef="PythonScope_1">
+          <p:PythonScope OperationTimeout="{x:Null}" DisplayName="Open Python Scope" sap:VirtualizedContainerService.HintSize="502,640" sap2010:WorkflowViewState.IdRef="PythonScope_1" TargetPlatform="x64">
             <p:PythonScope.Body>
               <ActivityAction x:TypeArguments="x:Object">
                 <ActivityAction.Argument>
@@ -280,14 +280,14 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="536,1322" sap2010:WorkflowViewState.IdRef="Sequence_25">
+            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="536,25" sap2010:WorkflowViewState.IdRef="Sequence_25">
               <Sequence.Variables>
                 <Variable x:TypeArguments="x:String" Name="FolderPath" />
                 <Variable x:TypeArguments="x:String" Name="FilePath" />
               </Sequence.Variables>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>

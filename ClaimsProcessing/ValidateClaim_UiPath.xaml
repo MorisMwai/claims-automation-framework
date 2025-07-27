@@ -5,6 +5,11 @@
     <x:Property Name="out_IsValid" Type="OutArgument(x:Boolean)" />
     <x:Property Name="out_ErrorDescription" Type="OutArgument(x:String)" />
     <x:Property Name="out_PolicyholderId" Type="OutArgument(x:String)" />
+    <x:Property Name="out_Branch" Type="OutArgument(x:String)" />
+    <x:Property Name="out_ClaimType" Type="OutArgument(x:String)" />
+    <x:Property Name="out_DblClaimAmount" Type="OutArgument(x:Double)" />
+    <x:Property Name="out_DateTimeClaimDate" Type="OutArgument(s:DateTime)" />
+    <x:Property Name="out_NormalizedClaimDate" Type="OutArgument(x:String)" />
   </x:Members>
   <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
@@ -40,6 +45,9 @@
       <x:String>UiPath.Mail.Outlook.Activities</x:String>
       <x:String>UiPath.Shared.Activities</x:String>
       <x:String>UiPath.Mail.Activities</x:String>
+      <x:String>System.Linq.Expressions</x:String>
+      <x:String>System.Globalization</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -112,20 +120,17 @@
       <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1309,972" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1309,4177" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Validating the Claims Data" sap:VirtualizedContainerService.HintSize="516,949" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <TryCatch DisplayName="Try Validating the Claims Data" sap:VirtualizedContainerService.HintSize="516,4154" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Variables>
-        <Variable x:TypeArguments="x:String" Name="ClaimAmount" />
-        <Variable x:TypeArguments="x:String" Name="ClaimDate" />
-        <Variable x:TypeArguments="x:String" Name="Branch" />
-        <Variable x:TypeArguments="x:String" Name="ClaimType" />
-        <Variable x:TypeArguments="x:Decimal" Name="DecimalClaimAmount" />
-        <Variable x:TypeArguments="s:DateTime" Name="DateTimeClaimDate" />
+        <Variable x:TypeArguments="x:String" Name="RawClaimAmount" />
+        <Variable x:TypeArguments="x:String" Name="RawClaimDate" />
+        <Variable x:TypeArguments="s:String[]" Name="DateFormats" />
       </TryCatch.Variables>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -134,16 +139,20 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
       <TryCatch.Try>
-        <Sequence sap2010:Annotation.AnnotationText="Validates a single claim record from Excel against business rules for Policyholder_ID, Claim_Amount, Claim_Date, Branch, and Claim_Type. Produces a Boolean flag for validity and a detailed Error_Description if invalid." DisplayName="Validate Claims" sap:VirtualizedContainerService.HintSize="514,671" sap2010:WorkflowViewState.IdRef="Sequence_3">
+        <Sequence sap2010:Annotation.AnnotationText="Validates a single claim record from Excel against business rules for Policyholder_ID, Claim_Amount, Claim_Date, Branch, and Claim_Type. Normalizes Claim_Date to yyyy-MM-dd if possible, produces a Boolean flag for validity and a detailed Error_Description if invalid." DisplayName="Validate Claims" sap:VirtualizedContainerService.HintSize="514,2693" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="x:Boolean" Name="isClaimAmountValid" />
+            <Variable x:TypeArguments="x:Boolean" Name="isClaimDateValid" />
+          </Sequence.Variables>
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:MultipleAssign DisplayName="Extract Claim Data from TransactionItem" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+          <ui:MultipleAssign DisplayName="Extract Claim Data from TransactionItem" sap:VirtualizedContainerService.HintSize="480,432" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
             <ui:MultipleAssign.AssignOperations>
-              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="16">
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
@@ -159,31 +168,31 @@
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
-                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_10">ClaimAmount</CSharpReference>
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_37">RawClaimAmount</CSharpReference>
                     </OutArgument>
                   </ui:AssignOperation.To>
                   <ui:AssignOperation.Value>
                     <InArgument x:TypeArguments="x:String">
-                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_7">in_TransactionItem["Claim_Amount"].ToString().Trim()</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_59">in_TransactionItem["Claim_Amount"].ToString().Trim()</CSharpValue>
                     </InArgument>
                   </ui:AssignOperation.Value>
                 </ui:AssignOperation>
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
-                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_11">ClaimDate</CSharpReference>
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_11">RawClaimDate</CSharpReference>
                     </OutArgument>
                   </ui:AssignOperation.To>
                   <ui:AssignOperation.Value>
                     <InArgument x:TypeArguments="x:String">
-                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_8">in_TransactionItem["Claim_Date"].ToString().Trim()</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_60">in_TransactionItem["Claim_Date"].ToString().Trim()</CSharpValue>
                     </InArgument>
                   </ui:AssignOperation.Value>
                 </ui:AssignOperation>
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_4">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
-                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_12">Branch</CSharpReference>
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_12">out_Branch</CSharpReference>
                     </OutArgument>
                   </ui:AssignOperation.To>
                   <ui:AssignOperation.Value>
@@ -195,7 +204,7 @@
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_5">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
-                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_13">ClaimType</CSharpReference>
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_13">out_ClaimType</CSharpReference>
                     </OutArgument>
                   </ui:AssignOperation.To>
                   <ui:AssignOperation.Value>
@@ -216,11 +225,59 @@
                     </InArgument>
                   </ui:AssignOperation.Value>
                 </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_9">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="s:String[]">
+                      <CSharpReference x:TypeArguments="s:String[]" sap2010:WorkflowViewState.IdRef="CSharpReference`1_34">DateFormats</CSharpReference>
+                    </OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="s:String[]">
+                      <CSharpValue x:TypeArguments="s:String[]" sap2010:WorkflowViewState.IdRef="CSharpValue`1_51">new string[] { "yyyy-MM-dd", "dd-MM-yyyy", "MM/dd/yyyy" }</CSharpValue>
+                    </InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_10">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:Double">
+                      <CSharpReference x:TypeArguments="x:Double" sap2010:WorkflowViewState.IdRef="CSharpReference`1_53">out_DblClaimAmount</CSharpReference>
+                    </OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:Double">
+                      <CSharpValue x:TypeArguments="x:Double" sap2010:WorkflowViewState.IdRef="CSharpValue`1_111">Double.Parse(RawClaimAmount)</CSharpValue>
+                    </InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_11">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="s:DateTime">
+                      <CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference`1_39">out_DateTimeClaimDate</CSharpReference>
+                    </OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="s:DateTime">
+                      <CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue`1_107">DateTime.ParseExact(RawClaimDate, DateFormats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None)</CSharpValue>
+                    </InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_12">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_52">out_NormalizedClaimDate</CSharpReference>
+                    </OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_109">out_DateTimeClaimDate.ToString("yyyy-MM-dd")</CSharpValue>
+                    </InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
               </scg:List>
             </ui:MultipleAssign.AssignOperations>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 <x:Boolean x:Key="IsPinned">False</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
@@ -269,7 +326,9 @@
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Policyholder_ID: Too short; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_92">$"{out_ErrorDescription}Invalid Policyholder_ID: Too short; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
@@ -295,7 +354,9 @@
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Policyholder_ID: Too long; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_93">$"{out_ErrorDescription}Invalid Policyholder_ID: Too long; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
@@ -321,7 +382,9 @@
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Policyholder_ID: Must be alphanumeric; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_94">$"{out_ErrorDescription}Invalid Policyholder_ID: Must be alphanumeric; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
@@ -349,16 +412,36 @@
                     </OutArgument>
                   </Assign.To>
                   <Assign.Value>
-                    <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Policyholder_ID: Cannot be blank; </InArgument>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_91">$"{out_ErrorDescription}Invalid Policyholder_ID: Cannot be blank; "</CSharpValue>
+                    </InArgument>
                   </Assign.Value>
                 </Assign>
               </Sequence>
             </ui:IfElseIfV2.Then>
           </ui:IfElseIfV2>
+          <Assign DisplayName="Parse Claim_Amount" sap:VirtualizedContainerService.HintSize="480,120" sap2010:WorkflowViewState.IdRef="Assign_15">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Boolean">
+                <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference`1_41">isClaimAmountValid</CSharpReference>
+              </OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Boolean">
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_112">Double.TryParse(RawClaimAmount, out out_DblClaimAmount)</CSharpValue>
+              </InArgument>
+            </Assign.Value>
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+          </Assign>
           <ui:IfElseIfV2 DisplayName="Validate Claim_Amount" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="IfElseIfV2_2">
             <ui:IfElseIfV2.Condition>
               <InArgument x:TypeArguments="x:Boolean">
-                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_17">!decimal.TryParse(ClaimAmount, out DecimalClaimAmount)</CSharpValue>
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_65">!isClaimAmountValid</CSharpValue>
               </InArgument>
             </ui:IfElseIfV2.Condition>
             <ui:IfElseIfV2.Else>
@@ -371,7 +454,7 @@
                 <ui:LogMessage DisplayName="Log Message - Claim_Amount is valid" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info">
                   <ui:LogMessage.Message>
                     <InArgument x:TypeArguments="x:Object">
-                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_32">$"Claim_Amount is valid: {DecimalClaimAmount}"</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_50">$"Claim_Amount is valid: {out_DblClaimAmount.ToString()}"</CSharpValue>
                     </InArgument>
                   </ui:LogMessage.Message>
                 </ui:LogMessage>
@@ -379,53 +462,57 @@
             </ui:IfElseIfV2.Else>
             <ui:IfElseIfV2.ElseIfs>
               <sc:BindingList x:TypeArguments="ui:IfElseIfBlock" AllowEdit="True" AllowNew="True" AllowRemove="True" RaiseListChangedEvents="True">
-                <ui:IfElseIfBlock BlockType="ElseIf" DisplayName="If else if block" sap2010:WorkflowViewState.IdRef="IfElseIfBlock_6">
+                <ui:IfElseIfBlock BlockType="ElseIf" DisplayName="If else if block" sap2010:WorkflowViewState.IdRef="IfElseIfBlock_10">
                   <ui:IfElseIfBlock.Condition>
                     <InArgument x:TypeArguments="x:Boolean">
-                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_18">DecimalClaimAmount &lt;= 0</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_66">out_DblClaimAmount &lt;= 0</CSharpValue>
                     </InArgument>
                   </ui:IfElseIfBlock.Condition>
                   <ui:IfElseIfBlock.Then>
-                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,171" sap2010:WorkflowViewState.IdRef="Sequence_12">
+                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,171" sap2010:WorkflowViewState.IdRef="Sequence_23">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <Assign DisplayName="Assign - Claim_Amount Not Positive" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_7">
+                      <Assign DisplayName="Assign - Claim_Amount Not Positive" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_16">
                         <Assign.To>
                           <OutArgument x:TypeArguments="x:String">
-                            <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_20">out_ErrorDescription</CSharpReference>
+                            <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_42">out_ErrorDescription</CSharpReference>
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Amount: Must be positive; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_98">$"{out_ErrorDescription}Invalid Claim_Amount: Not a valid number; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
                   </ui:IfElseIfBlock.Then>
                 </ui:IfElseIfBlock>
-                <ui:IfElseIfBlock BlockType="ElseIf" DisplayName="If else if block" sap2010:WorkflowViewState.IdRef="IfElseIfBlock_7">
+                <ui:IfElseIfBlock BlockType="ElseIf" DisplayName="If else if block" sap2010:WorkflowViewState.IdRef="IfElseIfBlock_12">
                   <ui:IfElseIfBlock.Condition>
                     <InArgument x:TypeArguments="x:Boolean">
-                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_19">DecimalClaimAmount &gt; 1000000</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_67">out_DblClaimAmount &gt; 1000000</CSharpValue>
                     </InArgument>
                   </ui:IfElseIfBlock.Condition>
                   <ui:IfElseIfBlock.Then>
-                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,171" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,171" sap2010:WorkflowViewState.IdRef="Sequence_24">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <Assign DisplayName="Assign - Claim_Amount Exceeds Limit" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_8">
+                      <Assign DisplayName="Assign - Claim_Amount Exceeds Limit" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_17">
                         <Assign.To>
                           <OutArgument x:TypeArguments="x:String">
-                            <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_21">out_ErrorDescription</CSharpReference>
+                            <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_43">out_ErrorDescription</CSharpReference>
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Amount: Exceeds KES 1,000,000; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_99">$"{out_ErrorDescription}Invalid Claim_Amount: Exceeds 1,000,000; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
@@ -446,23 +533,43 @@
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <Assign DisplayName="Assign - Claim_Amount Not Valid Decimal" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_6">
+                <Assign DisplayName="Assign - Claim_Amount Invalid" sap:VirtualizedContainerService.HintSize="434,111" sap2010:WorkflowViewState.IdRef="Assign_7">
                   <Assign.To>
                     <OutArgument x:TypeArguments="x:String">
-                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_19">out_ErrorDescription</CSharpReference>
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_20">out_ErrorDescription</CSharpReference>
                     </OutArgument>
                   </Assign.To>
                   <Assign.Value>
-                    <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Amount: Not a number; </InArgument>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_97">$"{out_ErrorDescription}Invalid Claim_Amount: Not a valid number; "</CSharpValue>
+                    </InArgument>
                   </Assign.Value>
                 </Assign>
               </Sequence>
             </ui:IfElseIfV2.Then>
           </ui:IfElseIfV2>
-          <ui:IfElseIfV2 DisplayName="Validate Claim_Date" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="IfElseIfV2_3">
+          <Assign DisplayName="Parse Claim_Date" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="Assign_18">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Boolean">
+                <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference`1_46">isClaimDateValid</CSharpReference>
+              </OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Boolean">
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_71">DateTime.TryParseExact(RawClaimDate, DateFormats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out out_DateTimeClaimDate)</CSharpValue>
+              </InArgument>
+            </Assign.Value>
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+          </Assign>
+          <ui:IfElseIfV2 DisplayName="Validate Claim_Date" sap:VirtualizedContainerService.HintSize="480,1016" sap2010:WorkflowViewState.IdRef="IfElseIfV2_3">
             <ui:IfElseIfV2.Condition>
               <InArgument x:TypeArguments="x:Boolean">
-                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_23">!DateTime.TryParse(ClaimDate, out DateTimeClaimDate)</CSharpValue>
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_72">!isClaimDateValid</CSharpValue>
               </InArgument>
             </ui:IfElseIfV2.Condition>
             <ui:IfElseIfV2.Else>
@@ -475,7 +582,7 @@
                 <ui:LogMessage DisplayName="Log Message - Claim_Date is valid" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info">
                   <ui:LogMessage.Message>
                     <InArgument x:TypeArguments="x:Object">
-                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_31">$"Claim_Date is valid: {DateTimeClaimDate.ToString("yyyy-MM-dd")}"</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_108">$"Claim_Date normalized and valid: {out_NormalizedClaimDate}"</CSharpValue>
                     </InArgument>
                   </ui:LogMessage.Message>
                 </ui:LogMessage>
@@ -486,7 +593,7 @@
                 <ui:IfElseIfBlock BlockType="ElseIf" DisplayName="If else if block" sap2010:WorkflowViewState.IdRef="IfElseIfBlock_8">
                   <ui:IfElseIfBlock.Condition>
                     <InArgument x:TypeArguments="x:Boolean">
-                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_24">DateTimeClaimDate &lt; new DateTime(2024, 7, 23)</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_24">out_DateTimeClaimDate &lt; new DateTime(2024, 7, 23)</CSharpValue>
                     </InArgument>
                   </ui:IfElseIfBlock.Condition>
                   <ui:IfElseIfBlock.Then>
@@ -503,7 +610,9 @@
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Date: Earlier than 2024-07-23; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_101">$"{out_ErrorDescription}Invalid Claim_Date: Earlier than 2024-07-23; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
@@ -512,7 +621,7 @@
                 <ui:IfElseIfBlock BlockType="ElseIf" DisplayName="If else if block" sap2010:WorkflowViewState.IdRef="IfElseIfBlock_9">
                   <ui:IfElseIfBlock.Condition>
                     <InArgument x:TypeArguments="x:Boolean">
-                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_25">DateTimeClaimDate &gt; new DateTime(2025, 7, 23)</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_25">out_DateTimeClaimDate &gt; new DateTime(2025, 7, 23)</CSharpValue>
                     </InArgument>
                   </ui:IfElseIfBlock.Condition>
                   <ui:IfElseIfBlock.Then>
@@ -529,7 +638,9 @@
                           </OutArgument>
                         </Assign.To>
                         <Assign.Value>
-                          <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Date: Later than 2025-07-23; </InArgument>
+                          <InArgument x:TypeArguments="x:String">
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_102">$"{out_ErrorDescription}Invalid Claim_Date: Later than 2025-07-23; "</CSharpValue>
+                          </InArgument>
                         </Assign.Value>
                       </Assign>
                     </Sequence>
@@ -539,7 +650,7 @@
             </ui:IfElseIfV2.ElseIfs>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 <x:Boolean x:Key="IsPinned">False</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
@@ -557,7 +668,9 @@
                     </OutArgument>
                   </Assign.To>
                   <Assign.Value>
-                    <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Date: Not in a valid format (expected YYYY-MM-DD); </InArgument>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_100">$"{out_ErrorDescription}Invalid Claim_Date: Unrecognized format; "</CSharpValue>
+                    </InArgument>
                   </Assign.Value>
                 </Assign>
               </Sequence>
@@ -566,7 +679,7 @@
           <If DisplayName="Validate Branch" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="If_1">
             <If.Condition>
               <InArgument x:TypeArguments="x:Boolean">
-                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_30">!(new List&lt;string&gt;{"Kenya","Uganda","South Sudan","Malawi"}.Contains(Branch))</CSharpValue>
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_30">!(new List&lt;string&gt;{"Kenya","Uganda","South Sudan","Malawi"}.Contains(out_Branch))</CSharpValue>
               </InArgument>
             </If.Condition>
             <sap:WorkflowViewStateService.ViewState>
@@ -589,7 +702,9 @@
                     </OutArgument>
                   </Assign.To>
                   <Assign.Value>
-                    <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Branch: Must be one of Kenya, Uganda, South Sudan, Malawi; </InArgument>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_104">$"{out_ErrorDescription}Invalid Branch: Must be one of Kenya, Uganda, South Sudan, Malawi; "</CSharpValue>
+                    </InArgument>
                   </Assign.Value>
                 </Assign>
               </Sequence>
@@ -604,22 +719,22 @@
                 <ui:LogMessage DisplayName="Log Message - Branch is valid" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Info">
                   <ui:LogMessage.Message>
                     <InArgument x:TypeArguments="x:Object">
-                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_33">$"Branch is valid: {Branch}"</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_33">$"Branch is valid: {out_Branch}"</CSharpValue>
                     </InArgument>
                   </ui:LogMessage.Message>
                 </ui:LogMessage>
               </Sequence>
             </If.Else>
           </If>
-          <If DisplayName="Validate Claim_Type" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="If_2">
+          <If DisplayName="Validate Claim_Type" sap:VirtualizedContainerService.HintSize="480,548" sap2010:WorkflowViewState.IdRef="If_2">
             <If.Condition>
               <InArgument x:TypeArguments="x:Boolean">
-                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_34">!(new List&lt;string&gt;{"Health","Motor","Property","Education"}.Contains(ClaimType))</CSharpValue>
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_34">!(new List&lt;string&gt;{"Health","Motor","Property","Education"}.Contains(out_ClaimType))</CSharpValue>
               </InArgument>
             </If.Condition>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 <x:Boolean x:Key="IsPinned">False</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
@@ -637,7 +752,9 @@
                     </OutArgument>
                   </Assign.To>
                   <Assign.Value>
-                    <InArgument x:TypeArguments="x:String" xml:space="preserve">Invalid Claim_Type: Must be one of Health, Motor, Property, Education; </InArgument>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_105">$"{out_ErrorDescription}Invalid Claim_Type: Must be one of Health, Motor, Property, Education; "</CSharpValue>
+                    </InArgument>
                   </Assign.Value>
                 </Assign>
               </Sequence>
@@ -652,7 +769,7 @@
                 <ui:LogMessage DisplayName="Log Message - Claim_Type is valid" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info">
                   <ui:LogMessage.Message>
                     <InArgument x:TypeArguments="x:Object">
-                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_36">$"Claim_Type is valid: {ClaimType}"</CSharpValue>
+                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_36">$"Claim_Type is valid: {out_ClaimType}"</CSharpValue>
                     </InArgument>
                   </ui:LogMessage.Message>
                 </ui:LogMessage>
@@ -697,14 +814,14 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="514,25" sap2010:WorkflowViewState.IdRef="Sequence_22">
+            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="514,1202" sap2010:WorkflowViewState.IdRef="Sequence_22">
               <Sequence.Variables>
                 <Variable x:TypeArguments="x:String" Name="FolderPath" />
                 <Variable x:TypeArguments="x:String" Name="FilePath" />
               </Sequence.Variables>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
@@ -785,7 +902,7 @@
                   </InArgument>
                 </ui:LogMessage.Message>
               </ui:LogMessage>
-              <Rethrow DisplayName="Rethrow Exception" sap:VirtualizedContainerService.HintSize="434,48" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
+              <Rethrow DisplayName="Rethrow Exception" sap:VirtualizedContainerService.HintSize="480,48" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
             </Sequence>
           </ActivityAction>
         </Catch>
