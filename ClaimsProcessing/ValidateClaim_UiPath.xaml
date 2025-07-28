@@ -120,13 +120,13 @@
       <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1309,4177" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1309,5307" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Validating the Claims Data" sap:VirtualizedContainerService.HintSize="516,4154" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <TryCatch DisplayName="Try Validating the Claims Data using UiPath" sap:VirtualizedContainerService.HintSize="516,5284" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Variables>
         <Variable x:TypeArguments="x:String" Name="RawClaimAmount" />
         <Variable x:TypeArguments="x:String" Name="RawClaimDate" />
@@ -139,7 +139,7 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
       <TryCatch.Try>
-        <Sequence sap2010:Annotation.AnnotationText="Validates a single claim record from Excel against business rules for Policyholder_ID, Claim_Amount, Claim_Date, Branch, and Claim_Type. Normalizes Claim_Date to yyyy-MM-dd if possible, produces a Boolean flag for validity and a detailed Error_Description if invalid." DisplayName="Validate Claims" sap:VirtualizedContainerService.HintSize="514,2693" sap2010:WorkflowViewState.IdRef="Sequence_3">
+        <Sequence sap2010:Annotation.AnnotationText="Validates a single claim record from Excel against business rules for Policyholder_ID, Claim_Amount, Claim_Date, Branch, and Claim_Type. Normalizes Claim_Date to yyyy-MM-dd if possible, produces a Boolean flag for validity and a detailed Error_Description if invalid." DisplayName="Validate Claims" sap:VirtualizedContainerService.HintSize="514,3823" sap2010:WorkflowViewState.IdRef="Sequence_3">
           <Sequence.Variables>
             <Variable x:TypeArguments="x:Boolean" Name="isClaimAmountValid" />
             <Variable x:TypeArguments="x:Boolean" Name="isClaimDateValid" />
@@ -150,6 +150,13 @@
               <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
+          <ui:LogMessage DisplayName="Log Message - UiPath Validation" sap:VirtualizedContainerService.HintSize="480,183" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="Info">
+            <ui:LogMessage.Message>
+              <InArgument x:TypeArguments="x:Object">
+                <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_114">"Started claim data validation using UiPath activities"</CSharpValue>
+              </InArgument>
+            </ui:LogMessage.Message>
+          </ui:LogMessage>
           <ui:MultipleAssign DisplayName="Extract Claim Data from TransactionItem" sap:VirtualizedContainerService.HintSize="480,432" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
             <ui:MultipleAssign.AssignOperations>
               <scg:List x:TypeArguments="ui:AssignOperation" Capacity="16">
@@ -438,7 +445,7 @@
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
           </Assign>
-          <ui:IfElseIfV2 DisplayName="Validate Claim_Amount" sap:VirtualizedContainerService.HintSize="480,57" sap2010:WorkflowViewState.IdRef="IfElseIfV2_2">
+          <ui:IfElseIfV2 DisplayName="Validate Claim_Amount" sap:VirtualizedContainerService.HintSize="480,1004" sap2010:WorkflowViewState.IdRef="IfElseIfV2_2">
             <ui:IfElseIfV2.Condition>
               <InArgument x:TypeArguments="x:Boolean">
                 <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_65">!isClaimAmountValid</CSharpValue>
@@ -483,7 +490,7 @@
                         </Assign.To>
                         <Assign.Value>
                           <InArgument x:TypeArguments="x:String">
-                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_98">$"{out_ErrorDescription}Invalid Claim_Amount: Not a valid number; "</CSharpValue>
+                            <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_113">$"{out_ErrorDescription}Invalid Claim_Amount: Must be positive; "</CSharpValue>
                           </InArgument>
                         </Assign.Value>
                       </Assign>
@@ -522,7 +529,7 @@
             </ui:IfElseIfV2.ElseIfs>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 <x:Boolean x:Key="IsPinned">False</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>

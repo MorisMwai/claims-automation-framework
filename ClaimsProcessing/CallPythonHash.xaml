@@ -135,7 +135,7 @@
           </sap:WorkflowViewStateService.ViewState>
           <ui:MultipleAssign DisplayName="Initialize Python Configuration" sap:VirtualizedContainerService.HintSize="502,246" sap2010:WorkflowViewState.IdRef="MultipleAssign_3">
             <ui:MultipleAssign.AssignOperations>
-              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_9">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
@@ -160,18 +160,6 @@
                     </InArgument>
                   </ui:AssignOperation.Value>
                 </ui:AssignOperation>
-                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_11">
-                  <ui:AssignOperation.To>
-                    <OutArgument x:TypeArguments="x:String">
-                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_51">HashScriptPath</CSharpReference>
-                    </OutArgument>
-                  </ui:AssignOperation.To>
-                  <ui:AssignOperation.Value>
-                    <InArgument x:TypeArguments="x:String">
-                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_51">in_Config["HashScriptPath"].ToString()</CSharpValue>
-                    </InArgument>
-                  </ui:AssignOperation.Value>
-                </ui:AssignOperation>
                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_12">
                   <ui:AssignOperation.To>
                     <OutArgument x:TypeArguments="x:String">
@@ -181,6 +169,18 @@
                   <ui:AssignOperation.Value>
                     <InArgument x:TypeArguments="x:String">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_52">Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)</CSharpValue>
+                    </InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_11">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_51">HashScriptPath</CSharpReference>
+                    </OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_51">in_Config["HashScriptPath"].ToString()</CSharpValue>
                     </InArgument>
                   </ui:AssignOperation.Value>
                 </ui:AssignOperation>
@@ -239,7 +239,7 @@
                       </OutArgument>
                     </p:InvokeMethod.Result>
                   </p:InvokeMethod>
-                  <p:GetObject x:TypeArguments="x:String" DisplayName="Get Python Object" sap:VirtualizedContainerService.HintSize="434,127" sap2010:WorkflowViewState.IdRef="GetObject`1_2">
+                  <p:GetObject x:TypeArguments="x:String" DisplayName="Get Python Object - Convert Python Result to String" sap:VirtualizedContainerService.HintSize="434,127" sap2010:WorkflowViewState.IdRef="GetObject`1_2">
                     <p:GetObject.PythonObject>
                       <InArgument x:TypeArguments="p:PythonObject">
                         <CSharpValue x:TypeArguments="p:PythonObject" sap2010:WorkflowViewState.IdRef="CSharpValue`1_59">HashResultObject</CSharpValue>
