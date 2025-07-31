@@ -1,5 +1,6 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="InsertIntoSQLite" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:sdo="clr-namespace:System.Data.Odbc;assembly=System.Data.Odbc" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:umae="clr-namespace:UiPath.Mail.Activities.Enums;assembly=UiPath.Mail.Activities" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.Mail.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
+    <x:Property Name="in_RunStart" Type="InArgument(s:DateTime)" />
     <x:Property Name="in_TransactionItem" Type="InOutArgument(sd:DataRow)" />
     <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
     <x:Property Name="in_IsValid" Type="InArgument(x:Boolean)" />
@@ -41,13 +42,13 @@
       <x:String>System.Xml.Linq</x:String>
       <x:String>System.IO</x:String>
       <x:String>UiPath.Core</x:String>
-      <x:String>GlobalVariablesNamespace</x:String>
-      <x:String>GlobalConstantsNamespace</x:String>
       <x:String>System.Linq.Expressions</x:String>
       <x:String>System.Numerics</x:String>
       <x:String>System.Data.Odbc</x:String>
       <x:String>System.Data.Common</x:String>
       <x:String>System.Runtime.InteropServices</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -127,7 +128,7 @@
       <AssemblyReference>System.Collections.Immutable</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1309,4166" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1309,1818.0000000000002" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:Int32" Name="ValidRowsInserted" />
       <Variable x:TypeArguments="x:Int32" Name="InvalidRowsInserted" />
@@ -140,11 +141,7 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Inserting Claims into db" sap:VirtualizedContainerService.HintSize="488,4143" sap2010:WorkflowViewState.IdRef="TryCatch_1">
-      <TryCatch.Variables>
-        <Variable x:TypeArguments="x:String" Name="FolderPath" />
-        <Variable x:TypeArguments="x:String" Name="FilePath" />
-      </TryCatch.Variables>
+    <TryCatch DisplayName="Try Inserting Claims into db" sap:VirtualizedContainerService.HintSize="488,1795" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Try>
         <Sequence sap2010:Annotation.AnnotationText="Handles inserting claims into SQLite database securely using parameterized queries. Insert hashed Policyholder_ID for valid claims, original ID for invalid claims with Error_Description. " DisplayName="Insert Claims" sap:VirtualizedContainerService.HintSize="486,1447" sap2010:WorkflowViewState.IdRef="Sequence_29">
           <sap:WorkflowViewStateService.ViewState>
@@ -173,11 +170,16 @@
             </Assign.To>
             <Assign.Value>
               <InArgument x:TypeArguments="x:String">
-                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_78">$"DRIVER=Devart ODBC Driver for SQLite;Description=DSN for encrypted SQLite database used in Claims Automation Framework. ;Database={in_Config["DbPath"].ToString()};Encryption Key=$[WA`1q*/o^2vYK:i5$A591D9DF7$;Encryption Algorithm=AES256;Locking Mode=Exclusive;Synchronous=Off"</CSharpValue>
+                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_157">$"Dsn={in_Config["SQLiteDSN"].ToString()}"</CSharpValue>
               </InArgument>
             </Assign.Value>
           </Assign>
-          <ui:DatabaseConnect DisplayName="Connect to SQLite" sap:VirtualizedContainerService.HintSize="452,92" sap2010:WorkflowViewState.IdRef="DatabaseConnect_1" ProviderName="System.Data.Odbc" ConnectionString="Dsn=ClaimsAutomation">
+          <ui:DatabaseConnect DisplayName="Connect to SQLite" sap:VirtualizedContainerService.HintSize="452,92" sap2010:WorkflowViewState.IdRef="DatabaseConnect_1" ProviderName="System.Data.Odbc">
+            <ui:DatabaseConnect.ConnectionString>
+              <InArgument x:TypeArguments="x:String">
+                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_158">ConnectionString</CSharpValue>
+              </InArgument>
+            </ui:DatabaseConnect.ConnectionString>
             <ui:DatabaseConnect.DatabaseConnection>
               <OutArgument x:TypeArguments="ui:DatabaseConnection">
                 <CSharpReference x:TypeArguments="ui:DatabaseConnection" sap2010:WorkflowViewState.IdRef="CSharpReference`1_62">DbConnection</CSharpReference>
@@ -197,7 +199,7 @@
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:ExecuteNonQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Run Command - Insert Valid Claim" sap:VirtualizedContainerService.HintSize="416,151" sap2010:WorkflowViewState.IdRef="ExecuteNonQuery_1" Sql="INSERT INTO Valid_Claims (Claim_ID, Policyholder_ID, Claim_Amount, Claim_Date, Branch, Claim_Type, Supporting_Document) VALUES (?, ?, ?, ?, ?, ?, ?)">
+                <ui:ExecuteNonQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Run Command - Insert Valid Claim" sap:VirtualizedContainerService.HintSize="416,151" sap2010:WorkflowViewState.IdRef="ExecuteNonQuery_1" Sql="INSERT INTO Valid_Claims (Claim_ID, Policyholder_ID, Claim_Amount, Claim_Date, Branch, Claim_Type, Supporting_Document, Processed_Timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)">
                   <ui:ExecuteNonQuery.AffectedRecords>
                     <OutArgument x:TypeArguments="x:Int32">
                       <CSharpReference x:TypeArguments="x:Int32" sap2010:WorkflowViewState.IdRef="CSharpReference`1_63">ValidRowsInserted</CSharpReference>
@@ -209,26 +211,29 @@
                     </InArgument>
                   </ui:ExecuteNonQuery.ExistingDbConnection>
                   <ui:ExecuteNonQuery.Parameters>
-                    <InArgument x:TypeArguments="x:String" x:Key=":ClaimId">
+                    <InArgument x:TypeArguments="x:String" x:Key="ClaimId">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_102">in_TransactionItem["Claim_ID"].ToString() ?? string.Empty</CSharpValue>
                     </InArgument>
-                    <InArgument x:TypeArguments="x:String" x:Key=":PolicyholderId">
+                    <InArgument x:TypeArguments="x:String" x:Key="PolicyholderId">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_103">in_HashedPolicyholderId ?? string.Empty</CSharpValue>
                     </InArgument>
-                    <InArgument x:TypeArguments="x:Double" x:Key=":ClaimAmount">
+                    <InArgument x:TypeArguments="x:Double" x:Key="ClaimAmount">
                       <CSharpValue x:TypeArguments="x:Double" sap2010:WorkflowViewState.IdRef="CSharpValue`1_134">in_ClaimAmount</CSharpValue>
                     </InArgument>
-                    <InArgument x:TypeArguments="x:String" x:Key=":ClaimDate">
+                    <InArgument x:TypeArguments="x:String" x:Key="ClaimDate">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_132">in_ClaimDate ?? string.Empty</CSharpValue>
                     </InArgument>
-                    <InArgument x:TypeArguments="x:String" x:Key=":BranchName">
+                    <InArgument x:TypeArguments="x:String" x:Key="BranchName">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_137">in_TransactionItem["Branch"].ToString() ?? string.Empty</CSharpValue>
                     </InArgument>
-                    <InArgument x:TypeArguments="x:String" x:Key=":ClaimTypeCategory">
+                    <InArgument x:TypeArguments="x:String" x:Key="ClaimTypeCategory">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_136">in_TransactionItem["Claim_Type"].ToString() ?? string.Empty</CSharpValue>
                     </InArgument>
-                    <InArgument x:TypeArguments="x:String" x:Key=":SupportingDocumentPath">
+                    <InArgument x:TypeArguments="x:String" x:Key="SupportingDocumentPath">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_110">in_TransactionItem["Supporting_Document"].ToString() ?? string.Empty</CSharpValue>
+                    </InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="ProcessedTimestamp">
+                      <CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue`1_156">in_RunStart</CSharpValue>
                     </InArgument>
                   </ui:ExecuteNonQuery.Parameters>
                 </ui:ExecuteNonQuery>
@@ -248,7 +253,7 @@
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:ExecuteNonQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Run Command - Insert Invalid Claim" sap:VirtualizedContainerService.HintSize="416,151" sap2010:WorkflowViewState.IdRef="ExecuteNonQuery_2" Sql="INSERT INTO Invalid_Claims (Claim_ID, Policyholder_ID, Claim_Amount, Claim_Date, Branch, Claim_Type, Supporting_Document, Error_Description)VALUES (?, ?, ?, ?, ?, ?, ?, ?)">
+                <ui:ExecuteNonQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Run Command - Insert Invalid Claim" sap:VirtualizedContainerService.HintSize="416,151" sap2010:WorkflowViewState.IdRef="ExecuteNonQuery_2" Sql="INSERT INTO Invalid_Claims (Claim_ID, Policyholder_ID, Claim_Amount, Claim_Date, Branch, Claim_Type, Supporting_Document, Error_Description, Processed_Timestamp)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)">
                   <ui:ExecuteNonQuery.AffectedRecords>
                     <OutArgument x:TypeArguments="x:Int32">
                       <CSharpReference x:TypeArguments="x:Int32" sap2010:WorkflowViewState.IdRef="CSharpReference`1_64">InvalidRowsInserted</CSharpReference>
@@ -284,6 +289,9 @@
                     <InArgument x:TypeArguments="x:String" x:Key="ErrorDescription">
                       <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_112">in_ErrorDescription ?? string.Empty</CSharpValue>
                     </InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="ProcessedTimestamp">
+                      <CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue`1_155">in_RunStart</CSharpValue>
+                    </InArgument>
                   </ui:ExecuteNonQuery.Parameters>
                 </ui:ExecuteNonQuery>
                 <ui:LogMessage DisplayName="Log Insert Invalid Claim Result" sap:VirtualizedContainerService.HintSize="416,174" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info">
@@ -311,10 +319,14 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="486,1202" sap2010:WorkflowViewState.IdRef="Sequence_31">
+            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="486,25" sap2010:WorkflowViewState.IdRef="Sequence_31">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="FilePath" />
+                <Variable x:TypeArguments="x:String" Name="FolderPath" />
+              </Sequence.Variables>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
@@ -328,7 +340,7 @@
               <Assign DisplayName="Assign - Screenshots folder" sap:VirtualizedContainerService.HintSize="452,120" sap2010:WorkflowViewState.IdRef="Assign_17">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:String">
-                    <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_69">FolderPath</CSharpReference>
+                    <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_73">FolderPath</CSharpReference>
                   </OutArgument>
                 </Assign.To>
                 <Assign.Value>
@@ -352,7 +364,7 @@
                   </InArgument>
                 </ui:LogMessage.Message>
               </ui:LogMessage>
-              <ui:SendOutlookMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" MailMessage="{x:Null}" ReplyTo="{x:Null}" TimeoutMS="{x:Null}" UseRichTextEditor="{x:Null}" ConnectionMode="LegacyConfiguration" DisplayName="Send Outlook Desktop Mail Message - System exception" sap:VirtualizedContainerService.HintSize="434,239" sap2010:WorkflowViewState.IdRef="SendOutlookMail_1" Importance="Normal" IsBodyHtml="False" IsDraft="False" Sensitivity="Normal" UseISConnection="False">
+              <ui:SendOutlookMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" MailMessage="{x:Null}" ReplyTo="{x:Null}" TimeoutMS="{x:Null}" UseRichTextEditor="{x:Null}" ConnectionMode="LegacyConfiguration" DisplayName="Send Outlook Desktop Mail Message - System exception" sap:VirtualizedContainerService.HintSize="452,239" sap2010:WorkflowViewState.IdRef="SendOutlookMail_1" Importance="Normal" IsBodyHtml="False" IsDraft="False" Sensitivity="Normal" UseISConnection="False">
                 <ui:SendOutlookMail.Account>
                   <InArgument x:TypeArguments="x:String">
                     <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_71">in_Config["SenderEmail"].ToString()</CSharpValue>
@@ -395,7 +407,7 @@
                   </InArgument>
                 </ui:LogMessage.Message>
               </ui:LogMessage>
-              <Rethrow DisplayName="Rethrow Exception" sap:VirtualizedContainerService.HintSize="434,48" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
+              <Rethrow DisplayName="Rethrow Exception" sap:VirtualizedContainerService.HintSize="452,48" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
             </Sequence>
           </ActivityAction>
         </Catch>
@@ -404,10 +416,14 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="sdo:OdbcException" Name="exception" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="486,1202" sap2010:WorkflowViewState.IdRef="Sequence_34">
+            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="486,25" sap2010:WorkflowViewState.IdRef="Sequence_34">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="FilePath" />
+                <Variable x:TypeArguments="x:String" Name="FolderPath" />
+              </Sequence.Variables>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
@@ -418,10 +434,10 @@
                   </InArgument>
                 </ui:LogMessage.Message>
               </ui:LogMessage>
-              <Assign DisplayName="Assign - Screenshots folder" sap:VirtualizedContainerService.HintSize="452,120" sap2010:WorkflowViewState.IdRef="Assign_19">
+              <Assign DisplayName="Assign - Screenshots folder" sap:VirtualizedContainerService.HintSize="452,120" sap2010:WorkflowViewState.IdRef="Assign_21">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:String">
-                    <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_70">FolderPath</CSharpReference>
+                    <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_74">FolderPath</CSharpReference>
                   </OutArgument>
                 </Assign.To>
                 <Assign.Value>
@@ -488,7 +504,7 @@
                   </InArgument>
                 </ui:LogMessage.Message>
               </ui:LogMessage>
-              <Rethrow DisplayName="Rethrow Exception" sap:VirtualizedContainerService.HintSize="434,48" sap2010:WorkflowViewState.IdRef="Rethrow_2" />
+              <Rethrow DisplayName="Rethrow Exception" sap:VirtualizedContainerService.HintSize="452,48" sap2010:WorkflowViewState.IdRef="Rethrow_2" />
             </Sequence>
           </ActivityAction>
         </Catch>

@@ -40,8 +40,6 @@
       <x:String>System.Xml.Linq</x:String>
       <x:String>System.IO</x:String>
       <x:String>UiPath.Core</x:String>
-      <x:String>GlobalVariablesNamespace</x:String>
-      <x:String>GlobalConstantsNamespace</x:String>
       <x:String>System.Linq.Expressions</x:String>
       <x:String>Newtonsoft.Json.Linq</x:String>
       <x:String>Newtonsoft.Json</x:String>
@@ -50,6 +48,8 @@
       <x:String>System.Collections.Specialized</x:String>
       <x:String>UiPath.Web.Activities</x:String>
       <x:String>System.Numerics</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -133,7 +133,7 @@
       <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1367,2464" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1309,2281" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="ValidationResultJson" />
       <Variable x:TypeArguments="x:String" Name="PythonPath" />
@@ -147,9 +147,9 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Validating Claims Data using Python" sap:VirtualizedContainerService.HintSize="538,2441" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <TryCatch DisplayName="Try Validating Claims Data using Python" sap:VirtualizedContainerService.HintSize="538,2258" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Try>
-        <Sequence sap2010:Annotation.AnnotationText="This workflow leverages Python’s robust date and numeric parsing capabilities to validate the claims data. It reads transaction item fields, validates them via a Python script, and returns normalized outputs. Using Python offloads complex parsing logic and makes the validation rules easier to maintain." DisplayName="Validate Claims" sap:VirtualizedContainerService.HintSize="536,2157" sap2010:WorkflowViewState.IdRef="Sequence_29">
+        <Sequence sap2010:Annotation.AnnotationText="This workflow leverages Python’s robust date and numeric parsing capabilities to validate the claims data. It reads transaction item fields, validates them via a Python script, and returns normalized outputs. Using Python offloads complex parsing logic and makes the validation rules easier to maintain." DisplayName="Validate Claims" sap:VirtualizedContainerService.HintSize="536,1974" sap2010:WorkflowViewState.IdRef="Sequence_29">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -217,13 +217,13 @@
               </scg:List>
             </ui:MultipleAssign.AssignOperations>
           </ui:MultipleAssign>
-          <p:PythonScope OperationTimeout="{x:Null}" DisplayName="Python Scope - Use Python to Validate Claim" sap:VirtualizedContainerService.HintSize="502,776" sap2010:WorkflowViewState.IdRef="PythonScope_1" TargetPlatform="x64">
+          <p:PythonScope OperationTimeout="{x:Null}" DisplayName="Python Scope - Use Python to Validate Claim" sap:VirtualizedContainerService.HintSize="502,593" sap2010:WorkflowViewState.IdRef="PythonScope_1" TargetPlatform="x64">
             <p:PythonScope.Body>
               <ActivityAction x:TypeArguments="x:Object">
                 <ActivityAction.Argument>
                   <DelegateInArgument x:TypeArguments="x:Object" Name="PythonEngineSessionProperty" />
                 </ActivityAction.Argument>
-                <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="468,707" sap2010:WorkflowViewState.IdRef="Sequence_32">
+                <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="468,524" sap2010:WorkflowViewState.IdRef="Sequence_32">
                   <Sequence.Variables>
                     <Variable x:TypeArguments="p:PythonObject" Name="ValidateClaimsScript" />
                     <Variable x:TypeArguments="p:PythonObject" Name="ValidationResultObject" />
@@ -280,7 +280,7 @@
                       </OutArgument>
                     </p:GetObject.Result>
                   </p:GetObject>
-                  <ui:DeserializeJson x:TypeArguments="scg:Dictionary(x:String, x:Object)" JsonSample="{x:Null}" DisplayName="Deserialize Validation Result" sap:VirtualizedContainerService.HintSize="434,127" sap2010:WorkflowViewState.IdRef="DeserializeJson`1_1">
+                  <ui:DeserializeJson x:TypeArguments="scg:Dictionary(x:String, x:Object)" JsonSample="{x:Null}" DisplayName="Deserialize Validation Result" sap:VirtualizedContainerService.HintSize="434,118" sap2010:WorkflowViewState.IdRef="DeserializeJson`1_1">
                     <ui:DeserializeJson.JsonObject>
                       <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
                         <CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)" sap2010:WorkflowViewState.IdRef="CSharpReference`1_103">dict_ValidationData</CSharpReference>
@@ -292,13 +292,6 @@
                       </InArgument>
                     </ui:DeserializeJson.JsonString>
                   </ui:DeserializeJson>
-                  <ui:LogMessage DisplayName="Log Validation Output" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="Info">
-                    <ui:LogMessage.Message>
-                      <InArgument x:TypeArguments="x:Object">
-                        <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_162">$"Python Output: {dict_ValidationData}"</CSharpValue>
-                      </InArgument>
-                    </ui:LogMessage.Message>
-                  </ui:LogMessage>
                 </Sequence>
               </ActivityAction>
             </p:PythonScope.Body>
