@@ -128,11 +128,10 @@
       <AssemblyReference>System.Collections.Immutable</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="1309,1818.0000000000002" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="1269,1698" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:Int32" Name="ValidRowsInserted" />
       <Variable x:TypeArguments="x:Int32" Name="InvalidRowsInserted" />
-      <Variable x:TypeArguments="x:String" Name="DbPassword" />
       <Variable x:TypeArguments="ui:DatabaseConnection" Name="DbConnection" />
       <Variable x:TypeArguments="x:String" Name="ConnectionString" />
     </Sequence.Variables>
@@ -141,27 +140,15 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Inserting Claims into db" sap:VirtualizedContainerService.HintSize="488,1795" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <TryCatch DisplayName="Try Inserting Claims into db" sap:VirtualizedContainerService.HintSize="488,1675" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Try>
-        <Sequence sap2010:Annotation.AnnotationText="Handles inserting claims into SQLite database securely using parameterized queries. Insert hashed Policyholder_ID for valid claims, original ID for invalid claims with Error_Description. " DisplayName="Insert Claims" sap:VirtualizedContainerService.HintSize="486,1447" sap2010:WorkflowViewState.IdRef="Sequence_29">
+        <Sequence sap2010:Annotation.AnnotationText="Handles inserting claims into SQLite database securely using parameterized queries. Insert hashed Policyholder_ID for valid claims, original ID for invalid claims with Error_Description. " DisplayName="Insert Claims" sap:VirtualizedContainerService.HintSize="486,1327" sap2010:WorkflowViewState.IdRef="Sequence_29">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <Assign DisplayName="Retrieve db password" sap:VirtualizedContainerService.HintSize="452,120" sap2010:WorkflowViewState.IdRef="Assign_16">
-            <Assign.To>
-              <OutArgument x:TypeArguments="x:String">
-                <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_65">DbPassword</CSharpReference>
-              </OutArgument>
-            </Assign.To>
-            <Assign.Value>
-              <InArgument x:TypeArguments="x:String">
-                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_67">in_Config["SQLite_DBPassword"].ToString()</CSharpValue>
-              </InArgument>
-            </Assign.Value>
-          </Assign>
           <Assign DisplayName="Build SQLite Connection String" sap:VirtualizedContainerService.HintSize="452,120" sap2010:WorkflowViewState.IdRef="Assign_18">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">
